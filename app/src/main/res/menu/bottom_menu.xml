@@ -9,9 +9,7 @@
         android:title="Shorts"
         android:icon="@drawable/baseline_whatshot_24"/>
     <item
-        android:id="@+id/fab"
-        android:title=""
-        android:enabled="false"/>
+        android:title=""/>
     <item
         android:id="@+id/subscriptions"
         android:title="Subscriptions"
