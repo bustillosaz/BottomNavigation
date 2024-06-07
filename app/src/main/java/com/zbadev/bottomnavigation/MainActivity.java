@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.internal.NavigationMenu;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.zbadev.bottomnavigation.databinding.ActivityMainBinding;
 
@@ -66,20 +67,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
+        navigationView.setNavigationItemSelectedListener(this);
+        //
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
-        }
+        }*/
+
         // del otro
-        replaceFragment(new HomeFragment());
+        //replaceFragment(new HomeFragment());
         bottomNavigationView.setBackground(null);
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                id = item.getItemId();
+                if(id == R.id.home){
+                    replaceFragment(new HomeFragment());
+                    return true;
+                } else if (id == R.id.shorts) {
+                    replaceFragment(new ShortsFragment());
+                    return true;
+                } else if (id == R.id.subscriptions) {
+                    replaceFragment(new SuscriptionFragment());
+                    return true;
+                }else if (id == R.id.library){
+                    replaceFragment(new LibraryFragment());
+                    return true;
+                }
+                return true;
+            }
+        });
+
+        fragmentManager = getSupportFragmentManager();
+        replaceFragment(new HomeFragment());
+
+       /* bottomNavigationView.setOnItemSelectedListener(item -> {
             id = item.getItemId();
             if(id == R.id.home){
                 replaceFragment(new HomeFragment());
@@ -91,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 replaceFragment(new LibraryFragment());
             }
             return true;
-        });
+        });*/
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
@@ -164,22 +193,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         try {
             ids = item.getItemId();
             if(ids == R.id.nav_home){
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                replaceFragment(new HomeFragment());
                 return true;
+                //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             } else if (ids == R.id.nav_settings) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShortsFragment()).commit();
+                replaceFragment(new ShortsFragment());
                 return true;
+                //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShortsFragment()).commit();
             } else if (ids == R.id.nav_share) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SuscriptionFragment()).commit();
+                replaceFragment(new SuscriptionFragment());
+                return true;
+                //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SuscriptionFragment()).commit();
             }else if (ids == R.id.nav_about){
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new LibraryFragment()).commit();
+                replaceFragment(new LibraryFragment());
+                return true;
+                //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new LibraryFragment()).commit();
             } else if (ids == R.id.nav_logout) {
                 Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+                return true;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
 
         /*switch (item.getItemId()) {
             case R.id.nav_home:
@@ -198,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
                 break;
         }*/
-            drawerLayout.closeDrawer(GravityCompat.START);
+            //drawerLayout.closeDrawer(GravityCompat.START);
         }catch (Exception e){
             Toast.makeText(this,"Data not inserted" + e.getMessage(),Toast.LENGTH_LONG).show();
         }
